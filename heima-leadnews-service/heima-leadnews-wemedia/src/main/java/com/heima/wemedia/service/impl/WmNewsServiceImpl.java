@@ -22,6 +22,7 @@ import com.heima.utils.thread.WmThreadLocalUtil;
 import com.heima.wemedia.mapper.WmMaterialMapper;
 import com.heima.wemedia.mapper.WmNewsMapper;
 import com.heima.wemedia.mapper.WmNewsMaterialMapper;
+import com.heima.wemedia.service.WmNewsAutoScanService;
 import com.heima.wemedia.service.WmNewsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +32,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import java.util.stream.Collectors;
@@ -71,7 +73,7 @@ public class WmNewsServiceImpl  extends ServiceImpl<WmNewsMapper, WmNews> implem
         if(StringUtils.isNotBlank(dto.getKeyword())) lambdaQueryWrapper.like(WmNews::getTitle, dto.getKeyword());
         //query the articles of current user
         lambdaQueryWrapper.eq(WmNews::getUserId, WmThreadLocalUtil.getUser().getId());
-        //query all results based on created time des
+        //query all results based on created time desc
         lambdaQueryWrapper.orderByDesc(WmNews::getCreatedTime);
 
         page = page(page, lambdaQueryWrapper);
@@ -82,8 +84,11 @@ public class WmNewsServiceImpl  extends ServiceImpl<WmNewsMapper, WmNews> implem
         return responseResult;
     }
 
+    @Autowired
+    private WmNewsAutoScanService wmNewsAutoScanService;
+
     @Override
-    public ResponseResult submitNews(WmNewsDto dto) {
+    public ResponseResult submitNews(WmNewsDto dto) throws InvocationTargetException, IllegalAccessException {
         //0 examine parameter
         if(dto == null || dto.getContent() == null) return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID);
         //1 add a new article or update the existing article
@@ -106,12 +111,13 @@ public class WmNewsServiceImpl  extends ServiceImpl<WmNewsMapper, WmNews> implem
         //3 if yes, close current method
         List<String> materials = extractUrlInfo(dto.getContent());
         saveRelativeInfoForContent(materials, wmNews.getId());
-        saveRelativeInfoForCover(dto, wmNews, materials);
-
 
         //4 if no, save the relationship between article and the materials
+        saveRelativeInfoForCover(dto, wmNews, materials);
 
-        return null;
+        wmNewsAutoScanService.autoScanWmNews(wmNews.getId());
+
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
     }
 
     private void saveRelativeInfoForCover(WmNewsDto dto, WmNews wmNews, List<String> materials) {

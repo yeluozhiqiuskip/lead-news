@@ -5,7 +5,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-article/pom.xml" />
         <option value="$PROJECT_DIR$/heima-leadnews-test/freemarker-demo/pom.xml" />
         <option value="$PROJECT_DIR$/heima-leadnews-test/minio-demo/pom.xml" />
         <option value="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-wemedia/pom.xml" />
@@ -14,6 +13,10 @@
         <option value="$PROJECT_DIR$/heima-leadnews-service/heima-leadnews-schedule/pom.xml" />
       </list>
     </option>
+  </component>
+  <component name="PWA">
+    <option name="enabled" value="true" />
+    <option name="wasEnabledAtLeastOnce" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
 </project>

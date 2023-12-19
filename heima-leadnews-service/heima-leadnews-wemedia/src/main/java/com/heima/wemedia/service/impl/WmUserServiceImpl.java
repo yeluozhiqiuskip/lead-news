@@ -26,12 +26,12 @@ public class WmUserServiceImpl extends ServiceImpl<WmUserMapper, WmUser> impleme
 
     @Override
     public ResponseResult login(WmLoginDto dto) {
-        //1.检查参数
+        //1.check parameters
         if(StringUtils.isBlank(dto.getName()) || StringUtils.isBlank(dto.getPassword())){
             return ResponseResult.errorResult(AppHttpCodeEnum.PARAM_INVALID,"用户名或密码为空");
         }
 
-        //2.查询用户
+        //2.query the users
         WmUser wmUser = getOne(Wrappers.<WmUser>lambdaQuery().eq(WmUser::getName, dto.getName()));
         if(wmUser == null){
             return ResponseResult.errorResult(AppHttpCodeEnum.DATA_NOT_EXIST);

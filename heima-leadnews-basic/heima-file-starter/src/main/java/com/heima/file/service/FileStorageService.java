@@ -1,11 +1,6 @@
 package com.heima.file.service;
 
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
-
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 /**
  * @author itheima
@@ -39,10 +34,10 @@ public interface FileStorageService {
 
     /**
      * 下载文件
-     * @param pathUrl  文件全路径
-     * @return  文件流
      *
+     * @param pathUrl 文件全路径
+     * @return 文件流
      */
-    public InputStream downLoadFile(String pathUrl);
+    public byte[] downLoadFile(String pathUrl);
 
 }

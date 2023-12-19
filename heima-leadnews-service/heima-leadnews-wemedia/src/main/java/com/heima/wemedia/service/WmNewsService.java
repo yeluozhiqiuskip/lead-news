@@ -7,10 +7,12 @@ import com.heima.model.wemedia.dtos.WmNewsPageReqDto;
 import com.heima.model.wemedia.pojos.WmNews;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.lang.reflect.InvocationTargetException;
+
 public interface WmNewsService extends IService<WmNews> {
 
     public ResponseResult findList(WmNewsPageReqDto dto);
-    public ResponseResult submitNews(WmNewsDto dto);
+    public ResponseResult submitNews(WmNewsDto dto) throws InvocationTargetException, IllegalAccessException;
 
     public ResponseResult downOrUp(WmNewsDto dto);
 
